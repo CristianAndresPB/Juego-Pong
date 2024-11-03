@@ -19,15 +19,21 @@ let frameHeight = 40; // Aumentamos el marco a 40 píxeles de altura
 let playerScore = 0;
 let computerScore = 0;
 
-// Imágenes de fondo y sprites
+// Imágenes y sonidos
 let fondo, barra1, barra2, bola;
+let bounceSound; // Sonido para la colisión de la pelota
+let gameOverSound; // Sonido para el fin de juego
+let goalSound; // Sonido para el gol anotado
 
 function preload() {
-    // Cargar la imagen de fondo y las nuevas imágenes antes de que el programa inicie
+    // Cargar las imágenes y los sonidos antes de que el programa inicie
     fondo = loadImage('Sprites/fondo1.png');
     barra1 = loadImage('Sprites/barra1.png'); // Imagen para la raqueta del jugador
     barra2 = loadImage('Sprites/barra2.png'); // Imagen para la raqueta de la computadora
     bola = loadImage('Sprites/bola.png'); // Imagen para la pelota
+    bounceSound = loadSound('Song/Bounce.mp3'); // Cargar el sonido de colisión
+    gameOverSound = loadSound('Song/gameOver.mp3'); // Cargar el sonido de fin de juego
+    goalSound = loadSound('Song/wooHoo.mp3'); // Cargar el sonido de gol anotado
 }
 
 function setup() {
@@ -93,6 +99,9 @@ function draw() {
         ballY < playerY + paddleHeight
     ) {
         ballSpeedX *= -1;
+        if (bounceSound.isPlaying() === false) { // Evitar que el sonido se superponga
+            bounceSound.play(); // Reproducir el sonido al colisionar con la raqueta del jugador
+        }
     }
 
     // Colisión con la raqueta de la computadora
@@ -102,15 +111,33 @@ function draw() {
         ballY < computerY + paddleHeight
     ) {
         ballSpeedX *= -1;
+        if (bounceSound.isPlaying() === false) { // Evitar que el sonido se superponga
+            bounceSound.play(); // Reproducir el sonido al colisionar con la raqueta de la computadora
+        }
     }
 
     // Reiniciar la pelota y actualizar el puntaje si sale de la pantalla
     if (ballX < 0) {
         computerScore++; // Puntaje para la computadora
+        if (!goalSound.isPlaying()) { // Evitar que el sonido se superponga
+            goalSound.play(); // Reproducir el sonido de gol
+        }
         resetBall();
     } else if (ballX > width) {
         playerScore++; // Puntaje para el jugador
+        if (!goalSound.isPlaying()) { // Evitar que el sonido se superponga
+            goalSound.play(); // Reproducir el sonido de gol
+        }
         resetBall();
+    }
+
+    // Verificar si algún jugador ha llegado a 10 puntos
+    if (playerScore === 10 || computerScore === 10) {
+        if (!gameOverSound.isPlaying()) { // Evitar que el sonido se superponga
+            gameOverSound.play(); // Reproducir el sonido de fin de juego
+        }
+        noLoop(); // Detener el juego al llegar a 10 puntos
+        // Puedes agregar un mensaje o reiniciar el juego aquí si lo deseas
     }
 
     // Movimiento de la raqueta del jugador con el mouse
@@ -132,3 +159,8 @@ function resetBall() {
     ballSpeedX *= -1; // Cambiar dirección para el siguiente saque
     ballRotation = 0; // Reiniciar rotación
 }
+
+
+
+
+
