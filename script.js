@@ -37,7 +37,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(800, 400); // Crear el canvas de 800x400 px
+    createCanvas(windowWidth, windowHeight); // Crear el canvas que ocupa toda la ventana
     // Posiciones iniciales
     playerY = height / 2 - paddleHeight / 2;
     computerY = height / 2 - paddleHeight / 2;
@@ -158,6 +158,11 @@ function resetBall() {
     ballY = height / 2;
     ballSpeedX *= -1; // Cambiar dirección para el siguiente saque
     ballRotation = 0; // Reiniciar rotación
+}
+
+// Función para ajustar el canvas al tamaño de la ventana
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight); // Ajustar el tamaño del canvas si se cambia el tamaño de la ventana
 }
 
 
