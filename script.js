@@ -12,7 +12,11 @@ let ballSpeedX = 4;
 let ballSpeedY = 4;
 
 // Altura del marco superior e inferior
-let frameHeight = 20;
+let frameHeight = 40; // Aumentamos el marco a 40 píxeles de altura
+
+// Puntajes de los jugadores
+let playerScore = 0;
+let computerScore = 0;
 
 function setup() {
     createCanvas(800, 400); // Crear el canvas de 800x400 px
@@ -42,6 +46,13 @@ function draw() {
     // Dibujar la pelota
     fill(255);
     ellipse(ballX, ballY, ballSize);
+
+    // Dibujar el puntaje
+    textSize(32);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text(playerScore, width / 4, frameHeight / 2); // Puntaje del jugador
+    text(computerScore, (3 * width) / 4, frameHeight / 2); // Puntaje de la computadora
 
     // Movimiento de la pelota
     ballX += ballSpeedX;
@@ -77,11 +88,13 @@ function draw() {
         ballSpeedX *= -1;
     }
 
-    // Reiniciar la pelota si sale de la pantalla (a la izquierda o derecha)
-    if (ballX < 0 || ballX > width) {
-        ballX = width / 2;
-        ballY = height / 2;
-        ballSpeedX *= -1;
+    // Reiniciar la pelota y actualizar el puntaje si sale de la pantalla
+    if (ballX < 0) {
+        computerScore++; // Puntaje para la computadora
+        resetBall();
+    } else if (ballX > width) {
+        playerScore++; // Puntaje para el jugador
+        resetBall();
     }
 
     // Movimiento de la raqueta del jugador con el mouse
@@ -95,3 +108,13 @@ function draw() {
     }
     computerY = constrain(computerY, frameHeight, height - frameHeight - paddleHeight);
 }
+
+// Función para reiniciar la posición de la pelota
+function resetBall() {
+    ballX = width / 2;
+    ballY = height / 2;
+    ballSpeedX *= -1; // Cambiar dirección para el siguiente saque
+}
+
+
+
