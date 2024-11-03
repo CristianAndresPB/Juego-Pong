@@ -10,6 +10,7 @@ let ballX, ballY;
 let ballSize = 20;
 let ballSpeedX = 4;
 let ballSpeedY = 4;
+let ballRotation = 0; // Variable para controlar la rotación de la pelota
 
 // Altura del marco superior e inferior
 let frameHeight = 40; // Aumentamos el marco a 40 píxeles de altura
@@ -17,6 +18,17 @@ let frameHeight = 40; // Aumentamos el marco a 40 píxeles de altura
 // Puntajes de los jugadores
 let playerScore = 0;
 let computerScore = 0;
+
+// Imágenes de fondo y sprites
+let fondo, barra1, barra2, bola;
+
+function preload() {
+    // Cargar la imagen de fondo y las nuevas imágenes antes de que el programa inicie
+    fondo = loadImage('Sprites/fondo1.png');
+    barra1 = loadImage('Sprites/barra1.png'); // Imagen para la raqueta del jugador
+    barra2 = loadImage('Sprites/barra2.png'); // Imagen para la raqueta de la computadora
+    bola = loadImage('Sprites/bola.png'); // Imagen para la pelota
+}
 
 function setup() {
     createCanvas(800, 400); // Crear el canvas de 800x400 px
@@ -28,24 +40,28 @@ function setup() {
 }
 
 function draw() {
-    background(0); // Fondo negro
+    // Dibujar la imagen de fondo en lugar de un color sólido
+    image(fondo, 0, 0, width, height);
 
     // Dibujar marco superior e inferior
     fill(150); // Color gris para los marcos
     rect(0, 0, width, frameHeight); // Marco superior
     rect(0, height - frameHeight, width, frameHeight); // Marco inferior
 
-    // Dibujar raqueta del jugador
-    fill(255);
-    rect(20, playerY, paddleWidth, paddleHeight);
+    // Dibujar raqueta del jugador usando la imagen 'barra1.png'
+    image(barra1, 20, playerY, paddleWidth, paddleHeight);
 
-    // Dibujar raqueta de la computadora
-    fill(255, 0, 0);
-    rect(width - 30, computerY, paddleWidth, paddleHeight);
+    // Dibujar raqueta de la computadora usando la imagen 'barra2.png'
+    image(barra2, width - 30, computerY, paddleWidth, paddleHeight);
 
-    // Dibujar la pelota
-    fill(255);
-    ellipse(ballX, ballY, ballSize);
+    // Aplicar rotación a la pelota en función de su velocidad
+    push();
+    translate(ballX, ballY);
+    ballRotation += (abs(ballSpeedX) + abs(ballSpeedY)) * 0.05; // Ajusta el valor de 0.05 para controlar la velocidad de rotación
+    rotate(ballRotation);
+    imageMode(CENTER);
+    image(bola, 0, 0, ballSize, ballSize);
+    pop();
 
     // Dibujar el puntaje
     textSize(32);
@@ -114,7 +130,5 @@ function resetBall() {
     ballX = width / 2;
     ballY = height / 2;
     ballSpeedX *= -1; // Cambiar dirección para el siguiente saque
+    ballRotation = 0; // Reiniciar rotación
 }
-
-
-
